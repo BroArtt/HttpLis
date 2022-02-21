@@ -24,7 +24,7 @@ namespace HttpListenerBrovko
 
 
 
-              //  Console.WriteLine(request.Url.AbsolutePath);
+              Console.WriteLine(request.Url);
               // Console.WriteLine(request.Url.PathAndQuery);
 
                 var staticFilesDirectory = "C:/Users/Hp/source/repos/HttpLis/HttpLis/HTMLPage/";
@@ -42,6 +42,8 @@ namespace HttpListenerBrovko
 
                 var staticFileToUpload = Path.Combine(staticFilesDirectory, file);
 
+                var ErrorPage = Path.Combine(staticFilesDirectory, "ErrorPage.html");
+
                 var contentToUpload = string.Empty;
 
                 if (File.Exists(staticFileToUpload) && staticFileToUpload.StartsWith(staticFilesDirectory))
@@ -51,7 +53,9 @@ namespace HttpListenerBrovko
                 else
                 {
                     response.StatusCode = (int)HttpStatusCode.NotFound;
+                    contentToUpload = File.ReadAllText(ErrorPage);
                 }
+
 
                 byte[] bufferhtml = System.Text.Encoding.UTF8.GetBytes(contentToUpload);
 
