@@ -15,20 +15,52 @@ namespace HttpListenerBrovko
             Console.WriteLine("Ожидание подключений...");
 
 
-            HttpListenerContext context = listener.GetContext();
-            HttpListenerRequest request = context.Request;
-            HttpListenerResponse response = context.Response;
+            while (true)
+            {
+                HttpListenerContext context = listener.GetContext();
 
-            string htmlfile = File.ReadAllText("C:/Users/Hp/Source/Repos/Httplistener/HTMLPage/Brovko.html");
-
-            string responseString = htmlfile;
-            byte[] bufferhtml = System.Text.Encoding.UTF8.GetBytes(responseString);
+                HttpListenerRequest request = context.Request;
+                HttpListenerResponse response = context.Response;
 
 
-            response.ContentLength64 = bufferhtml.Length;
-            Stream output = response.OutputStream;
-            output.Write(bufferhtml, 0, bufferhtml.Length);
-            output.Close();
+
+              //  Console.WriteLine(request.Url.AbsolutePath);
+              // Console.WriteLine(request.Url.PathAndQuery);
+
+                var staticFilesDirectory = "C:/Users/Hp/source/repos/HttpLis/HttpLis/HTMLPage/";
+                var file = string.Empty;
+
+
+                if (request.Url.AbsolutePath == "/")
+                {
+                    file = "Brovko.html";
+                }
+                else
+                {
+                    file = request.Url.AbsolutePath.Trim('/');
+                }
+
+                var staticFileToUpload = Path.Combine(staticFilesDirectory, file);
+
+                var contentToUpload = string.Empty;
+
+                if (File.Exists(staticFileToUpload) && staticFileToUpload.StartsWith(staticFilesDirectory))
+                {
+                    contentToUpload = File.ReadAllText(staticFileToUpload);
+                }
+                else
+                {
+                    response.StatusCode = (int)HttpStatusCode.NotFound;
+                }
+
+                byte[] bufferhtml = System.Text.Encoding.UTF8.GetBytes(contentToUpload);
+
+                response.ContentLength64 = bufferhtml.Length;
+                Stream output = response.OutputStream;
+                output.Write(bufferhtml, 0, bufferhtml.Length);
+                output.Close();
+
+            }
 
         }
     }
