@@ -24,7 +24,7 @@ namespace HttpListenerBrovko
 
 
 
-              Console.WriteLine(request.Url);
+              //Console.WriteLine(request.Url);
               // Console.WriteLine(request.Url.PathAndQuery);
 
                 var staticFilesDirectory = "C:/Users/Hp/source/repos/HttpLis/HttpLis/HTMLPage/";
