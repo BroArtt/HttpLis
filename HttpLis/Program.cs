@@ -30,40 +30,77 @@ namespace HttpListenerBrovko
                 var staticFilesDirectory = "C:/Users/Hp/source/repos/HttpLis/HttpLis/HTMLPage/";
                 var file = string.Empty;
 
+                if (request.HttpMethod == "GET") 
+                { 
 
-                if (request.Url.AbsolutePath == "/")
-                {
-                    file = "Brovko.html";
+                    if (request.Url.AbsolutePath == "/")
+                    {
+                        file = "Brovko.html";
+                    }
+                    else
+                     {
+                        file = request.Url.AbsolutePath.Trim('/');
+                    }
+
+                    var staticFileToUpload = Path.Combine(staticFilesDirectory, file);
+
+                    var ErrorPage = Path.Combine(staticFilesDirectory, "ErrorPage.html");
+
+                    var contentToUpload = string.Empty;
+
+                    if (File.Exists(staticFileToUpload) && staticFileToUpload.StartsWith(staticFilesDirectory))
+                    {
+                        contentToUpload = File.ReadAllText(staticFileToUpload);
+                    }
+                    else
+                    {
+                        response.StatusCode = (int)HttpStatusCode.NotFound;
+                        contentToUpload = File.ReadAllText(ErrorPage);
+                    }
+
+
+                    byte[] bufferhtml = System.Text.Encoding.UTF8.GetBytes(contentToUpload);
+
+                    response.ContentLength64 = bufferhtml.Length;
+                    Stream output = response.OutputStream;
+                    output.Write(bufferhtml, 0, bufferhtml.Length);
+                    output.Close();
+
+                } else if(request.HttpMethod == "POST") 
+                    {
+                    if (request.Url.AbsolutePath == "/sing-up")
+                    {
+                        file = "Users.html";
+                    }
+                    else
+                    {
+                        file = request.Url.AbsolutePath.Trim('/');
+                    }
+
+                    var staticFileToUpload = Path.Combine(staticFilesDirectory, file);
+
+                    var ErrorPage = Path.Combine(staticFilesDirectory, "ErrorPage.html");
+
+                    var contentToUpload = string.Empty;
+
+                    if (File.Exists(staticFileToUpload) && staticFileToUpload.StartsWith(staticFilesDirectory))
+                    {
+                        contentToUpload = File.ReadAllText(staticFileToUpload);
+                    }
+                    else
+                    {
+                        response.StatusCode = (int)HttpStatusCode.NotFound;
+                        contentToUpload = File.ReadAllText(ErrorPage);
+                    }
+
+
+                    byte[] bufferhtml = System.Text.Encoding.UTF8.GetBytes(contentToUpload);
+
+                    response.ContentLength64 = bufferhtml.Length;
+                    Stream output = response.OutputStream;
+                    output.Write(bufferhtml, 0, bufferhtml.Length);
+                    output.Close();
                 }
-                else
-                {
-                    file = request.Url.AbsolutePath.Trim('/');
-                }
-
-                var staticFileToUpload = Path.Combine(staticFilesDirectory, file);
-
-                var ErrorPage = Path.Combine(staticFilesDirectory, "ErrorPage.html");
-
-                var contentToUpload = string.Empty;
-
-                if (File.Exists(staticFileToUpload) && staticFileToUpload.StartsWith(staticFilesDirectory))
-                {
-                    contentToUpload = File.ReadAllText(staticFileToUpload);
-                }
-                else
-                {
-                    response.StatusCode = (int)HttpStatusCode.NotFound;
-                    contentToUpload = File.ReadAllText(ErrorPage);
-                }
-
-
-                byte[] bufferhtml = System.Text.Encoding.UTF8.GetBytes(contentToUpload);
-
-                response.ContentLength64 = bufferhtml.Length;
-                Stream output = response.OutputStream;
-                output.Write(bufferhtml, 0, bufferhtml.Length);
-                output.Close();
-
             }
 
         }
