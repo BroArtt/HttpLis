@@ -22,7 +22,7 @@ namespace HttpListenerBrovko
                     HttpListenerRequest request = context.Request;
                     HttpListenerResponse response = context.Response;
 
-                        var staticFilesDirectory = "C:/Users/Artem/source/repos/App1/HttpListest/HttpLis/HttpLis/HTMLPage/";
+                        var staticFilesDirectory = "../../../HTMLPage/";
                         var file = string.Empty;
                  
                         if (request.Url.AbsolutePath == "/")
